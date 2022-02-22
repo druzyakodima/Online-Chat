@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="319.0" style="-fx-border-color: #000000;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.windowchatlesson4.HelloController">
+   <bottom>
+      <SplitPane dividerPositions="0.7437027707808564" prefHeight="29.0" prefWidth="319.0" BorderPane.alignment="CENTER">
+        <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+               <children>
+                  <TextField fx:id="inputField" layoutX="42.0" layoutY="2.0" promptText="Ведите сообщение" style="-fx-border-color: #002f55;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </children>
+            </AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+               <children>
+                  <Button fx:id="buttonSend" layoutX="13.0" layoutY="2.0" mnemonicParsing="false" onAction="#doPushTextToTable" onKeyPressed="#doPushTextToTable" style="-fx-border-color: #000000; -fx-background-color: #002f55;" text="Отправить" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <font>
+                        <Font name="System Bold" size="11.0" />
+                     </font>
+                  </Button>
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
+   </bottom>
+   <center>
+      <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <top>
+            <MenuBar BorderPane.alignment="CENTER">
+              <menus>
+                <Menu mnemonicParsing="false" text="File">
+                  <items>
+                    <MenuItem mnemonicParsing="false" onAction="#closeWindow" text="Close" />
+                  </items>
+                </Menu>
+                  <Menu mnemonicParsing="false" text="Edit">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#cleanChat" text="Clean chat" />
+                    </items>
+                  </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                  <items>
+                    <MenuItem mnemonicParsing="false" onAction="#printInfo" text="About" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+         </top>
+         <center>
+            <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <top>
+                  <SplitPane dividerPositions="0.7316455696202532" prefHeight="24.0" prefWidth="318.0" BorderPane.alignment="CENTER">
+                    <items>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="21.0" prefWidth="70.0" style="-fx-border-color: #000000;">
+                           <children>
+                              <Button layoutY="2.0" mnemonicParsing="false" onAction="#cleanField" prefHeight="19.0" prefWidth="72.0" style="-fx-border-color: #1d334a; -fx-background-color: #002f55;" text="Отчистить" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <font>
+                                    <Font name="System Bold" size="9.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                        </AnchorPane>
+                    </items>
+                  </SplitPane>
+               </top>
+               <center>
+                  <SplitPane dividerPositions="0.35869565217391297" prefHeight="160.0" prefWidth="200.0" style="-fx-border-color: #000000;" BorderPane.alignment="CENTER">
+                    <items>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" style="-fx-border-color: #000000;">
+                           <children>
+                              <TableView fx:id="contactTable" layoutX="-45.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <columns>
+                                  <TableColumn fx:id="contactColumn" prefWidth="106.80001256465911" text="Контакты" />
+                                </columns>
+                              </TableView>
+                           </children>
+                        </AnchorPane>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" style="-fx-border-color: #000000;">
+                           <children>
+                              <TextArea fx:id="chatText" layoutX="-1.0" layoutY="27.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #1d334a;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                        </AnchorPane>
+                    </items>
+                  </SplitPane>
+               </center>
+            </BorderPane>
+         </center>
+      </BorderPane>
+   </center>
+</BorderPane>
