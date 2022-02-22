@@ -8,15 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-
-
 public class HelloController {
-
-    @FXML
-    private ResourceBundle resources;
-
-    @FXML
-    private URL location;
 
     @FXML
     private Button buttonSend;
@@ -95,5 +87,4 @@ public class HelloController {
                 new RowText("Дядя Юра")
         ));
     }
-
 }
