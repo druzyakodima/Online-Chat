@@ -1,5 +1,4 @@
 package com.example.windowchatlesson4;
-
 import javafx.beans.property.SimpleStringProperty;
 
 public class RowText {
