@@ -1,13 +1,9 @@
 package com.example.windowchatlesson4.models;
 
 import com.example.windowchatlesson4.controllers.ChatController;
-import com.example.windowchatlesson4.server.EchoServer;
 import javafx.scene.control.Alert;
-
 import java.io.*;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Locale;
 import java.util.Scanner;
 
 public class NetWork {

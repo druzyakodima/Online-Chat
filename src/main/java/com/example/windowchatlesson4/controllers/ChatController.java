@@ -1,7 +1,6 @@
 package com.example.windowchatlesson4.controllers;
 
 import com.example.windowchatlesson4.models.NetWork;
-import com.example.windowchatlesson4.server.EchoServer;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;

@@ -20,10 +20,6 @@ public class EchoServer {
         serverSocket = new ServerSocket(port);
     }
 
-    public EchoServer() {
-
-    }
-
     public void start() {
         try {
             while (true) {
