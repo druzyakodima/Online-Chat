@@ -9,6 +9,7 @@ module com.example.windowchatlesson4 {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
+    requires lombok;
 
     opens com.example.windowchatlesson4 to javafx.fxml;
     exports com.example.windowchatlesson4;

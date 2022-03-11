@@ -1,6 +1,6 @@
 package com.example.windowchatlesson4.controllers;
 
-import com.example.windowchatlesson4.models.NetWork;
+import com.example.windowchatlesson4.server.models.NetWork;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -53,9 +53,9 @@ public class ChatController {
     @FXML
     void SendMessage() {
 
-        String message = inputField.getText().trim();
+        String message = inputField.getText();
         if (!message.isBlank()) {
-
+            chatText.appendText("Я: " + message + "\n" + "\n");
             netWork.sendMessage(message);
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);

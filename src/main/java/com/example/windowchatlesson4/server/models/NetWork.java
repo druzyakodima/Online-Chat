@@ -1,4 +1,4 @@
-package com.example.windowchatlesson4.models;
+package com.example.windowchatlesson4.server.models;
 
 import com.example.windowchatlesson4.controllers.ChatController;
 import javafx.scene.control.Alert;
@@ -7,6 +7,15 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class NetWork {
+
+    private static final String AUTH_CMD_PREFIX = "/auth"; // + login + password
+    private static final String AUTHOK_CMD_PREFIX = "/authOk"; // + username
+    private static final String AUTHERR_CMD_PREFIX = "/authErr"; // + error message
+    private static final String CLIENT_MSG_CMD_PREFIX = "/cMsg"; // + Msg
+    private static final String SERVER_MSG_CMD_PREFIX = "/sMsg"; // + sMsg
+    private static final String PRIVATE_MSG_CMD_PREFIX = "/pMsg"; // + sMsg
+    private static final String STOP_SERVER_CMD_PREFIX = "/stop";
+    private static final String END_CLIENT_CMD_PREFIX = "/end";
 
     private final String DEFAULT_HOST = "localhost";
     private final int DEFAULT_PORT = 8180;
@@ -28,9 +37,9 @@ public class NetWork {
     }
 
     public void connect() {
-        Socket socket = null;
+
         try {
-            socket = new Socket("localhost", 8180);
+         Socket socket = new Socket("localhost", 8180);
             in = new DataInputStream(socket.getInputStream());
             out = new DataOutputStream(socket.getOutputStream());
 
@@ -58,12 +67,10 @@ public class NetWork {
     }
 
     public void waitMessage(ChatController chatController) {
-        Scanner scanner = new Scanner(System.in);
         Thread t = null;
         t = new Thread(() -> {
             while (true) {
                 try {
-
                     String message = in.readUTF();
                     chatController.appendMessage(message);
 

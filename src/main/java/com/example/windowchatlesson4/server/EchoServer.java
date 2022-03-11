@@ -1,80 +1,110 @@
 package com.example.windowchatlesson4.server;
 
-import java.io.DataInputStream;
+import com.example.windowchatlesson4.server.authentication.AuthenticationService;
+import com.example.windowchatlesson4.server.authentication.BaseAuthentication;
+import com.example.windowchatlesson4.server.handler.ClientHandler;
+import com.example.windowchatlesson4.server.models.User;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class EchoServer {
 
-    private static final int SERVER_PORT = 8180;
-    private static DataInputStream in;
-    private static DataOutputStream out;
-    Scanner scanner = new Scanner(System.in);
-    ServerSocket serverSocket;
+    private final ServerSocket serverSocket;
+    private final AuthenticationService authenticationService;
+    private final List<ClientHandler> clients;
+    ClientHandler clientHandler = new ClientHandler();
+
 
     public EchoServer(int port) throws IOException {
         serverSocket = new ServerSocket(port);
+        authenticationService = new BaseAuthentication();
+        clients = new ArrayList<>();
     }
 
     public void start() {
+        System.out.println("СЕРВЕР ЗАПУЩЕН!");
+        System.out.println("-------------------");
         try {
             while (true) {
-                System.out.println("Ожидание подключения...");
-                Socket clientSocket = serverSocket.accept();
-                System.out.println("Соединение установлено!");
-
-                in = new DataInputStream(clientSocket.getInputStream());
-                out = new DataOutputStream(clientSocket.getOutputStream());
-                sendMessageServer();
-
-                try {
-                    while (true) {
-                        String message = in.readUTF();
-                        if (message.equals("/server-stop")) {
-                            System.out.println("Сервер остановлен");
-                            System.exit(0);
-                        }
-
-                        System.out.println("Клиент: " + message);
-                        out.writeUTF("Я: " + message.toUpperCase());
-
-                    }
-                } catch (SocketException e) {
-                    clientSocket.close();
-                    System.out.println("Клиент отключился");
-                }
+                waitAndProcessNewClientConnection();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void sendMessageServer() {
 
-        Thread tServerSend = null;
-        tServerSend = new Thread(() -> {
+    private void waitAndProcessNewClientConnection() throws IOException {
 
-            while (true) {
-                try {
+        System.out.println("Ожидание клиента...");
+        Socket socket = serverSocket.accept();
+        System.out.println("Клиент подключился!");
 
-                    synchronized (this) {
-                        String messageServer = "Сервер: " + scanner.nextLine();
-                        out.writeUTF(messageServer);
-                    }
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        tServerSend.setDaemon(true);
-        tServerSend.start();
-
+        processClientConnection(socket);
     }
 
 
+    private void processClientConnection(Socket socket) throws IOException {
+        ClientHandler handler = new ClientHandler(this, socket);
+        handler.handle();
+    }
+
+    public AuthenticationService getAuthenticationService() {
+        return authenticationService;
+    }
+
+    public synchronized void subscribe(ClientHandler clientHandler) {
+        clients.add(clientHandler);
+    }
+
+    public synchronized void unSubscribe(ClientHandler clientHandler) {
+        clients.remove(clientHandler);
+    }
+
+    public synchronized boolean isUsernameBusy(String username) {
+        for (ClientHandler client : clients) {
+            if (client.getUsername().equals(username)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public synchronized void broadcastMessage(String message, ClientHandler sender) throws IOException {
+        for (ClientHandler client : clients) {
+            if (client == sender) {
+                continue;
+            }
+            client.sendMessage(sender.getUsername(), message);
+        }
+    }
+
+
+    public void privateMessage(String message, ClientHandler sender) {
+
+        String[] parse = message.split("\\s+",3);
+        String username = parse[1];
+        String privateMessage = parse[2];
+        new Thread(() -> {
+            for (ClientHandler client: clients){
+                if (client.getUsername().equals(username)){
+                    try {
+                        client.sendMessage(sender.getUsername(), privateMessage);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+        }).start();
+    }
+
 }
+

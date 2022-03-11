@@ -1,11 +1,12 @@
 package com.example.windowchatlesson4;
 
 import com.example.windowchatlesson4.controllers.ChatController;
-import com.example.windowchatlesson4.models.NetWork;
+import com.example.windowchatlesson4.server.models.NetWork;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
 import java.io.IOException;
 
 
