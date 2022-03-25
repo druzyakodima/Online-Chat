@@ -13,31 +13,20 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
-            prefWidth="319.0" style="-fx-border-color: #000000;" xmlns="http://javafx.com/javafx/17"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.windowchatlesson4.controllers.ChatController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="319.0" style="-fx-border-color: #000000;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.windowchatlesson4.controllers.ChatController">
     <bottom>
-        <SplitPane dividerPositions="0.7437027707808564" prefHeight="29.0" prefWidth="319.0"
-                   BorderPane.alignment="CENTER">
+        <SplitPane dividerPositions="0.7437027707808564" prefHeight="29.0" prefWidth="319.0" BorderPane.alignment="CENTER">
             <items>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                     <children>
-                        <TextField fx:id="inputField" layoutX="42.0" layoutY="2.0" onAction="#SendMessage"
-                                   promptText="Ведите сообщение" style="-fx-border-color: #002f55;"
-                                   AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                                   AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+                        <TextField fx:id="inputField" layoutX="42.0" layoutY="2.0" onAction="#SendMessage" promptText="Ведите сообщение" style="-fx-border-color: #002f55;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                     </children>
                 </AnchorPane>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                     <children>
-                        <Button fx:id="buttonSend" layoutX="13.0" layoutY="2.0" mnemonicParsing="false"
-                                onAction="#SendMessage"
-                                style="-fx-border-color: #000000; -fx-background-color: #002f55;" text="Отправить"
-                                textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                                AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <Button fx:id="buttonSend" layoutX="13.0" layoutY="2.0" mnemonicParsing="false" onAction="#SendMessage" style="-fx-border-color: #000000; -fx-background-color: #002f55;" text="Отправить" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                             <font>
-                                <Font name="System Bold" size="11.0"/>
+                                <Font name="System Bold" size="11.0" />
                             </font>
                         </Button>
                     </children>
@@ -52,17 +41,17 @@
                     <menus>
                         <Menu mnemonicParsing="false" text="File">
                             <items>
-                                <MenuItem mnemonicParsing="false" onAction="#closeWindow" text="Close"/>
+                                <MenuItem mnemonicParsing="false" onAction="#closeWindow" text="Close" />
                             </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Edit">
                             <items>
-                                <MenuItem mnemonicParsing="false" onAction="#cleanChat" text="Clean chat"/>
+                                <MenuItem mnemonicParsing="false" onAction="#cleanChat" text="Clean chat" />
                             </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Help">
                             <items>
-                                <MenuItem mnemonicParsing="false" onAction="#printInfo" text="About"/>
+                                <MenuItem mnemonicParsing="false" onAction="#printInfo" text="About" />
                             </items>
                         </Menu>
                     </menus>
@@ -75,35 +64,25 @@
                             <items>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                                     <children>
-                                        <SplitPane dividerPositions="0.3568702290076336" layoutX="51.0" layoutY="-69.0"
-                                                   prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0"
-                                                   AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                                                   AnchorPane.topAnchor="0.0">
+                                        <SplitPane dividerPositions="0.3568702290076336" layoutX="51.0" layoutY="-69.0" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <items>
-                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0"
-                                                            prefWidth="100.0">
+                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                                                     <children>
-                                                        <Label alignment="CENTER" layoutX="41.0" layoutY="2.0"
-                                                               text="Пользователи" AnchorPane.bottomAnchor="0.0"
-                                                               AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                                                               AnchorPane.topAnchor="0.0">
+                                                        <Label alignment="CENTER" layoutX="41.0" layoutY="2.0" text="Контакты" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                             <font>
-                                                                <Font name="System Bold" size="12.0"/>
+                                                                <Font name="System Bold" size="12.0" />
                                                             </font>
                                                         </Label>
                                                     </children>
                                                 </AnchorPane>
-                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0"
-                                                            prefWidth="100.0">
+                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                                                     <children>
-                                                        <Label alignment="CENTER" layoutX="42.0" layoutY="2.0"
-                                                               text="Чат" AnchorPane.bottomAnchor="0.0"
-                                                               AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                                                               AnchorPane.topAnchor="0.0">
+                                                        <Label alignment="BASELINE_LEFT" layoutX="42.0" layoutY="2.0" text="Чат" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                             <font>
-                                                                <Font name="System Bold" size="12.0"/>
+                                                                <Font name="System Bold" size="12.0" />
                                                             </font>
                                                         </Label>
+                                          <Label fx:id="usernameTitle" layoutX="110.0" layoutY="1.0" text="Пользователь" />
                                                     </children>
                                                 </AnchorPane>
                                             </items>
@@ -114,26 +93,16 @@
                         </SplitPane>
                     </top>
                     <center>
-                        <SplitPane dividerPositions="0.35869565217391297" prefHeight="160.0" prefWidth="200.0"
-                                   style="-fx-border-color: #000000;" BorderPane.alignment="CENTER">
+                        <SplitPane dividerPositions="0.35869565217391297" prefHeight="160.0" prefWidth="200.0" style="-fx-border-color: #000000;" BorderPane.alignment="CENTER">
                             <items>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0"
-                                            style="-fx-border-color: #000000;">
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" style="-fx-border-color: #000000;">
                                     <children>
-                                        <ListView fx:id="userList" layoutX="-29.0" layoutY="45.0" prefHeight="200.0"
-                                                  prefWidth="200.0" AnchorPane.bottomAnchor="0.0"
-                                                  AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                                                  AnchorPane.topAnchor="0.0"/>
+                                        <ListView fx:id="userList" layoutX="-29.0" layoutY="45.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                     </children>
                                 </AnchorPane>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0"
-                                            style="-fx-border-color: #000000;">
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" style="-fx-border-color: #000000;">
                                     <children>
-                                        <TextArea fx:id="chatText" editable="false" layoutX="-1.0" layoutY="27.0"
-                                                  prefHeight="200.0" prefWidth="200.0"
-                                                  style="-fx-border-color: #1d334a;" AnchorPane.bottomAnchor="0.0"
-                                                  AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                                                  AnchorPane.topAnchor="0.0"/>
+                                        <TextArea fx:id="chatText" editable="false" layoutX="-1.0" layoutY="27.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #1d334a;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                     </children>
                                 </AnchorPane>
                             </items>

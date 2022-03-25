@@ -1,18 +1,18 @@
 package com.example.windowchatlesson4.server;
 
+import com.example.windowchatlesson4.controllers.ChatController;
 import com.example.windowchatlesson4.server.authentication.AuthenticationService;
 import com.example.windowchatlesson4.server.authentication.BaseAuthentication;
 import com.example.windowchatlesson4.server.handler.ClientHandler;
-import com.example.windowchatlesson4.server.models.User;
+import javafx.collections.ObservableList;
+import javafx.scene.control.ListView;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.Scanner;
+
 
 public class EchoServer {
 
@@ -20,12 +20,14 @@ public class EchoServer {
     private final AuthenticationService authenticationService;
     private final List<ClientHandler> clients;
     ClientHandler clientHandler = new ClientHandler();
+    ChatController chatController = new ChatController();
 
 
     public EchoServer(int port) throws IOException {
         serverSocket = new ServerSocket(port);
         authenticationService = new BaseAuthentication();
         clients = new ArrayList<>();
+
     }
 
     public void start() {
@@ -66,6 +68,7 @@ public class EchoServer {
 
     public synchronized void unSubscribe(ClientHandler clientHandler) {
         clients.remove(clientHandler);
+        System.out.println(clients);
     }
 
     public synchronized boolean isUsernameBusy(String username) {
@@ -74,27 +77,33 @@ public class EchoServer {
                 return true;
             }
         }
+
         return false;
     }
 
-    public synchronized void broadcastMessage(String message, ClientHandler sender) throws IOException {
+    public synchronized void broadcastMessage(String message, ClientHandler sender, boolean isServerMessage) throws IOException {
         for (ClientHandler client : clients) {
             if (client == sender) {
                 continue;
             }
-            client.sendMessage(sender.getUsername(), message);
+            client.sendMessage(isServerMessage ? null : sender.getUsername(), message);
         }
+    }
+
+    public synchronized void broadcastMessage(String message, ClientHandler sender) throws IOException {
+        broadcastMessage(message, sender, false);
+
     }
 
 
     public void privateMessage(String message, ClientHandler sender) {
 
-        String[] parse = message.split("\\s+",3);
+        String[] parse = message.split("\\s+", 3);
         String username = parse[1];
         String privateMessage = parse[2];
         new Thread(() -> {
-            for (ClientHandler client: clients){
-                if (client.getUsername().equals(username)){
+            for (ClientHandler client : clients) {
+                if (client.getUsername().equals(username)) {
                     try {
                         client.sendMessage(sender.getUsername(), privateMessage);
                     } catch (IOException e) {
@@ -102,8 +111,27 @@ public class EchoServer {
                     }
                 }
             }
-
         }).start();
+    }
+
+    public synchronized void broadCastClients(ClientHandler sender) throws IOException{
+        for (ClientHandler client : clients) {
+
+            client.sendServerMessage(String.format("%s присоединился к чату", sender.getUsername()
+            ));
+            client.sendClientsList(clients);
+        }
+    }
+
+    public synchronized void broadCastClientsDisconnected(ClientHandler sender) throws IOException {
+        for (ClientHandler client: clients) {
+            if (client == sender) {
+                continue;
+            }
+            client.sendServerMessage(String.format("%s отключился", sender.getUsername()));
+            client.sendClientsList(clients);
+        }
+
     }
 
 }

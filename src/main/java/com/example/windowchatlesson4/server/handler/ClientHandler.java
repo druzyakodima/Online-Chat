@@ -1,13 +1,16 @@
 package com.example.windowchatlesson4.server.handler;
 
+import com.example.windowchatlesson4.controllers.ChatController;
 import com.example.windowchatlesson4.server.EchoServer;
 import com.example.windowchatlesson4.server.authentication.AuthenticationService;
-import com.example.windowchatlesson4.server.models.User;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.List;
 
 
 public class ClientHandler {
@@ -20,12 +23,15 @@ public class ClientHandler {
     private static final String PRIVATE_MSG_CMD_PREFIX = "/pMsg"; // + sMsg
     private static final String STOP_SERVER_CMD_PREFIX = "/stop";
     private static final String END_CLIENT_CMD_PREFIX = "/end ";
+    private static final String GET_CLIENTS_CMD = "/get";
 
+    private ObservableList<String> names;
     private EchoServer echoServer;
     private Socket clientSocket;
     private DataInputStream in;
     private DataOutputStream out;
     private String username;
+    ChatController chatController = new ChatController();
 
     public ClientHandler(EchoServer EchoServer, Socket clientSocket) {
         this.echoServer = EchoServer;
@@ -45,10 +51,12 @@ public class ClientHandler {
                 authentication();
                 readMassage();
             } catch (IOException e) {
+                echoServer.unSubscribe(this);
                 try {
-                    clientSocket.close();
+                    echoServer.broadCastClientsDisconnected(this);
                 } catch (IOException ex) {
                     ex.printStackTrace();
+
                 }
                 System.out.println("Клиент отключился!" + "\n" + "Ожидание клиента...");
 
@@ -72,11 +80,12 @@ public class ClientHandler {
     }
 
     private boolean processAuthentication(String message) throws IOException {
-        String[] parse = message.split("\\s+");
+        String[] parse = message.split("\\s+", 3);
         if (parse.length != 3) {
             out.writeUTF(AUTHERR_CMD_PREFIX + " Ошибка аутентификации");
             return false;
         }
+
         String login = parse[1];
         String password = parse[2];
 
@@ -90,10 +99,12 @@ public class ClientHandler {
                 return false;
             }
 
-            out.writeUTF(String.format("Пользователь %s подключился к чату...", username));
-            echoServer.subscribe(this);
+            out.writeUTF(AUTHOK_CMD_PREFIX + " " + username);
 
+            echoServer.subscribe(this);
             System.out.println("Пользователь " + username + " подключился к чату");
+            echoServer.broadCastClients(this);
+
             return true;
         } else {
             out.writeUTF(AUTHERR_CMD_PREFIX + " " + "Неверный логин или пароль");
@@ -106,7 +117,7 @@ public class ClientHandler {
             String message = in.readUTF();
             System.out.println("Сообщение | " + username + ": " + message);
             if (message.startsWith(STOP_SERVER_CMD_PREFIX)) {
-                System.exit(1);
+                System.exit(0);
             } else if (message.startsWith(END_CLIENT_CMD_PREFIX)) {
                 return;
 
@@ -119,10 +130,29 @@ public class ClientHandler {
     }
 
     public void sendMessage(String sender, String message) throws IOException {
-        out.writeUTF(String.format("%s: %s", sender, message));
+        if (sender != null) {
+            out.writeUTF(String.format("%s %s %s", CLIENT_MSG_CMD_PREFIX, sender, message));
+        } else {
+            out.writeUTF(String.format("%s %s", SERVER_MSG_CMD_PREFIX, message));
+        }
     }
 
     public String getUsername() {
         return username;
+    }
+
+    public void sendClientsList(List<ClientHandler> clients) throws IOException {
+    String message = String.format("%s %s", GET_CLIENTS_CMD, clients.toString());
+    out.writeUTF(message);
+        System.out.println(message);
+    }
+
+    @Override
+    public String toString() {
+        return username;
+    }
+
+    public void sendServerMessage(String message) throws IOException {
+        out.writeUTF(String.format("%s %s", SERVER_MSG_CMD_PREFIX, message));
     }
 }

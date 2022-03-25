@@ -1,5 +1,6 @@
 package com.example.windowchatlesson4.server.authentication;
 
+import com.example.windowchatlesson4.controllers.ChatController;
 import com.example.windowchatlesson4.server.models.User;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,9 +8,10 @@ import java.util.List;
 public class BaseAuthentication implements AuthenticationService {
 
     private static final List<User> clients = List.of(
-            new User("erick", "1111", "Эрик_Картман"),
-            new User("stan", "2222", "Стэн_Марш"),
-            new User("kenny", "3333", "Кенни_Маккормик")
+            new User("timofey", "1111", "Тимофей"),
+            new User("dmitriy", "2222", "Дмитрий"),
+            new User("diana", "3333", "Диана"),
+            new User("arman", "4444", "Арман")
     );
 
     @Override
