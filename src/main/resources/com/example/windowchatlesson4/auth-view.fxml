@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane onDragDetected="#closeAuth" prefHeight="169.0" prefWidth="316.0" style="-fx-border-color: #000000;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.windowchatlesson4.controllers.AuthController">
+   <children>
+      <TextField fx:id="loginField" layoutX="67.0" layoutY="26.0" prefHeight="34.0" prefWidth="200.0" AnchorPane.bottomAnchor="110.0" AnchorPane.leftAnchor="66.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="25.0" />
+      <Button layoutX="174.0" layoutY="136.0" mnemonicParsing="false" onAction="#closeAuth" prefHeight="34.0" prefWidth="62.0" style="-fx-background-color: #191970;" text="Close" textFill="WHITE" AnchorPane.rightAnchor="79.6" AnchorPane.topAnchor="128.0" />
+      <Label layoutX="134.0" layoutY="5.0" text="Login" AnchorPane.topAnchor="3.0">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+      <Label layoutX="131.0" layoutY="64.0" text="Password">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+      <Button layoutX="81.0" layoutY="136.0" mnemonicParsing="false" onAction="#checkAuth" prefHeight="34.0" prefWidth="62.0" style="-fx-background-color: #191970;" text="Sign in" textFill="#f7f5f5" AnchorPane.topAnchor="128.0" />
+      <PasswordField fx:id="passwordField" layoutX="66.0" layoutY="85.0" prefHeight="34.0" prefWidth="200.0" />
+   </children>
+</AnchorPane>
