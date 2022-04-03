@@ -10,6 +10,8 @@ module com.example.windowchatlesson4 {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires lombok;
+    requires org.xerial.sqlitejdbc;
+    requires java.sql;
 
     opens com.example.windowchatlesson4 to javafx.fxml;
     exports com.example.windowchatlesson4;

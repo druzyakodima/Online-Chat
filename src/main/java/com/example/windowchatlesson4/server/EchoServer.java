@@ -3,29 +3,32 @@ package com.example.windowchatlesson4.server;
 import com.example.windowchatlesson4.controllers.ChatController;
 import com.example.windowchatlesson4.server.authentication.AuthenticationService;
 import com.example.windowchatlesson4.server.authentication.BaseAuthentication;
+import com.example.windowchatlesson4.server.authentication.DBAuthenticationService;
 import com.example.windowchatlesson4.server.handler.ClientHandler;
+import com.example.windowchatlesson4.server.models.NetWork;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class EchoServer {
-
+    private ClientHandler clientHandler = new ClientHandler();
     private final ServerSocket serverSocket;
     private final AuthenticationService authenticationService;
     private final List<ClientHandler> clients;
-    ClientHandler clientHandler = new ClientHandler();
-    ChatController chatController = new ChatController();
+    NetWork netWork = new NetWork();
+    private List<ClientHandler> clientsChangeName = new ArrayList<>();
 
 
     public EchoServer(int port) throws IOException {
         serverSocket = new ServerSocket(port);
-        authenticationService = new BaseAuthentication();
+        authenticationService = new DBAuthenticationService();
         clients = new ArrayList<>();
 
     }
@@ -64,6 +67,7 @@ public class EchoServer {
 
     public synchronized void subscribe(ClientHandler clientHandler) {
         clients.add(clientHandler);
+        clientsChangeName.add(clientHandler);
     }
 
     public synchronized void unSubscribe(ClientHandler clientHandler) {
@@ -71,7 +75,7 @@ public class EchoServer {
         System.out.println(clients);
     }
 
-    public synchronized boolean isUsernameBusy(String username) {
+    public synchronized boolean isUsernameBusy(String username) throws IOException {
         for (ClientHandler client : clients) {
             if (client.getUsername().equals(username)) {
                 return true;
@@ -95,6 +99,43 @@ public class EchoServer {
 
     }
 
+    public void changeUsername(String message, ClientHandler sender) throws IOException {
+        String[] parse = message.split(" ", 3);
+        String login = parse[1];
+        String username = parse[2];
+        String oldName = sender.getUsername();
+        DBAuthenticationService dbAuthenticationService = new DBAuthenticationService();
+
+        new Thread(() -> {
+            try {
+                dbAuthenticationService.updateUsername(login, username);
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            for (ClientHandler client : clients) {
+
+                if (client.getUsername().equals(sender.getUsername())) {
+
+                    client.setUsername(username);
+                    netWork.setUsername(username);
+
+                    int index = clientsChangeName.indexOf(sender);
+                    clientsChangeName.set(index, client);
+                }
+                try {
+                    client.sendClientsList(clientsChangeName);
+                    client.sendServerMessage(String.format("%s поменял имя на %s", oldName, username
+                    ));
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }).start();
+    }
 
     public void privateMessage(String message, ClientHandler sender) {
 
@@ -114,7 +155,7 @@ public class EchoServer {
         }).start();
     }
 
-    public synchronized void broadCastClients(ClientHandler sender) throws IOException{
+    public synchronized void broadCastClients(ClientHandler sender) throws IOException {
         for (ClientHandler client : clients) {
 
             client.sendServerMessage(String.format("%s присоединился к чату", sender.getUsername()
@@ -124,7 +165,7 @@ public class EchoServer {
     }
 
     public synchronized void broadCastClientsDisconnected(ClientHandler sender) throws IOException {
-        for (ClientHandler client: clients) {
+        for (ClientHandler client : clients) {
             if (client == sender) {
                 continue;
             }
@@ -133,6 +174,5 @@ public class EchoServer {
         }
 
     }
-
 }
 

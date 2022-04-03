@@ -166,13 +166,7 @@ public class ChatController {
 
         Arrays.sort(usernames);
 
-        for (int i = 0; i < usernames.length; i++) {
-            if (usernames[i].equals(netWork.getUsername())) {
-                usernames[i] = usernames[i];
-            }
-        }
-
         userList.getItems().clear();
-        Collections.addAll(userList.getItems(), usernames);
+        Collections.addAll(userList.getItems(),usernames);
     }
 }

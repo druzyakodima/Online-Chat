@@ -23,6 +23,8 @@ public class NetWork {
     private static final String STOP_SERVER_CMD_PREFIX = "/stop";
     private static final String END_CLIENT_CMD_PREFIX = "/end";
     private static final String GET_CLIENTS_CMD = "/get";
+    private static final String CHANGE_USERNAME_CMD = "/ch";
+    private static final String REGISTER_CMD_PREFIX = "/reg";
 
     private final String DEFAULT_HOST = "localhost";
     private final int DEFAULT_PORT = 8180;
@@ -136,4 +138,29 @@ public class NetWork {
     public void sendPrivateMessage(String selectedRecipient, String message) {
         sendMessage(String.format("%s %s %s", PRIVATE_MSG_CMD_PREFIX, selectedRecipient, message));
     }
+
+
+    public String sendRegisterMessage(String login, String password, String username) {
+
+        try {
+            out.writeUTF(String.format("%s %s %s %s", REGISTER_CMD_PREFIX, login, password, username));
+            String response = in.readUTF();
+            this.username = response.split("\\s", 2)[1];
+            if (response.startsWith(AUTHOK_CMD_PREFIX)) {
+                this.username = response.split("\\s", 2)[1];
+                return null;
+            } else {
+                return response.split("\\s", 2)[1];
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return e.getMessage();
+        }
+
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 }
+
