@@ -52,7 +52,7 @@ public class AuthController {
             startClient.showErrorAlert("Ошибка аутентификации",authErrorMessage);
         }
     }
-/*
+
     @FXML
     void registerUser() {
         String login = loginFieldRegister.getText().trim();
@@ -73,7 +73,7 @@ public class AuthController {
             startClient.showErrorAlert("Ошибка регистарции",authErrorMessage);
         }
 
-    }*/
+    }
 
     @FXML
     public void closeAuth() {
@@ -87,7 +87,6 @@ public class AuthController {
     public void setStartClient(StartClient startClient) {
         this.startClient = startClient;
     }
-
 
 
 }

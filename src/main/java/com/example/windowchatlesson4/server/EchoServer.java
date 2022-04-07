@@ -2,18 +2,18 @@ package com.example.windowchatlesson4.server;
 
 import com.example.windowchatlesson4.controllers.ChatController;
 import com.example.windowchatlesson4.server.authentication.AuthenticationService;
-import com.example.windowchatlesson4.server.authentication.BaseAuthentication;
 import com.example.windowchatlesson4.server.authentication.DBAuthenticationService;
 import com.example.windowchatlesson4.server.handler.ClientHandler;
 import com.example.windowchatlesson4.server.models.NetWork;
-import javafx.collections.ObservableList;
-import javafx.scene.control.ListView;
 
-import java.io.IOException;
+
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.SQLException;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -24,6 +24,8 @@ public class EchoServer {
     private final List<ClientHandler> clients;
     NetWork netWork = new NetWork();
     private List<ClientHandler> clientsChangeName = new ArrayList<>();
+    private File historyChatFile = new File("src/main/resources/historyChat/history.txt");
+    private  BufferedWriter writeHistoryChat;
 
 
     public EchoServer(int port) throws IOException {
@@ -70,12 +72,12 @@ public class EchoServer {
         clientsChangeName.add(clientHandler);
     }
 
-    public synchronized void unSubscribe(ClientHandler clientHandler) {
+    public synchronized void unSubscribe(ClientHandler clientHandler)  {
         clients.remove(clientHandler);
         System.out.println(clients);
     }
 
-    public synchronized boolean isUsernameBusy(String username) throws IOException {
+    public synchronized boolean isUsernameBusy(String username) {
         for (ClientHandler client : clients) {
             if (client.getUsername().equals(username)) {
                 return true;
@@ -90,11 +92,14 @@ public class EchoServer {
             if (client == sender) {
                 continue;
             }
+            historyChat(message, sender);
+
             client.sendMessage(isServerMessage ? null : sender.getUsername(), message);
         }
     }
 
     public synchronized void broadcastMessage(String message, ClientHandler sender) throws IOException {
+
         broadcastMessage(message, sender, false);
 
     }
@@ -174,5 +179,18 @@ public class EchoServer {
         }
 
     }
+
+    private void historyChat(String message, ClientHandler sender)  {
+        try (BufferedWriter writeHistoryChat = new BufferedWriter(new FileWriter(historyChatFile, true));) {
+
+            writeHistoryChat.write(new Date(new Date().getTime()) + " " + sender.getUsername() + ": " + message + "\n");
+            writeHistoryChat.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
 }
 

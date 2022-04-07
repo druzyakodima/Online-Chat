@@ -7,10 +7,9 @@ import com.example.windowchatlesson4.server.authentication.DBAuthenticationServi
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -60,6 +59,7 @@ public class ClientHandler {
                 readMassage();
             } catch (IOException e) {
                 echoServer.unSubscribe(this);
+
                 try {
                     echoServer.broadCastClientsDisconnected(this);
                 } catch (IOException ex) {
@@ -179,8 +179,10 @@ public class ClientHandler {
     }
 
     private void readMassage() throws IOException {
+
         while (true) {
             String message = in.readUTF();
+
             System.out.println("Сообщение | " + username + ": " + message);
             if (message.startsWith(STOP_SERVER_CMD_PREFIX)) {
                 System.exit(0);
@@ -189,7 +191,7 @@ public class ClientHandler {
 
             } else if (message.startsWith(PRIVATE_MSG_CMD_PREFIX)) {
                 echoServer.privateMessage(message, this);
-            } else if (message.startsWith(CHANGE_USERNAME_CMD)){
+            } else if (message.startsWith(CHANGE_USERNAME_CMD)) {
                 echoServer.changeUsername(message, this);
             } else {
                 echoServer.broadcastMessage(message, this);

@@ -31,7 +31,6 @@ public class DBAuthenticationService implements AuthenticationService {
 
     @Override
     public void startAuthentication() throws ClassNotFoundException, SQLException {
-
     }
 
     @Override
@@ -40,7 +39,6 @@ public class DBAuthenticationService implements AuthenticationService {
     }
 
     public String insertUsername(String login, String password, String username)  {
-
         try {
 
            stmt.executeUpdate(String.format("INSERT INTO auth (login, password, username) VALUES ('user%s', '%s', " + "'username%s')", login, password, username));

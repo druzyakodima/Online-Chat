@@ -2,19 +2,14 @@ package com.example.windowchatlesson4.controllers;
 
 import com.example.windowchatlesson4.StartClient;
 import com.example.windowchatlesson4.server.models.NetWork;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.text.DateFormat;
 import java.util.*;
-import java.util.function.Predicate;
 
 import static javafx.collections.FXCollections.observableList;
 
@@ -35,15 +30,12 @@ public class ChatController {
     @FXML
     private Label usernameTitle;
 
-    private String online = "<- ";
 
     private StartClient startClient;
 
     private String selectedRecipient;
 
-    DataInputStream in;
-    DataOutputStream out;
-
+    private File fileChatHistory = new File("src/main/resources/historyChat/history.txt");
 
     public ListView<String> getUserList() {
         return userList;
@@ -60,6 +52,13 @@ public class ChatController {
 
     @FXML
     void initialize() {
+
+        try {
+            chatText.appendText(readUsingBufferedReader(fileChatHistory) + "\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
         userList.setItems(FXCollections.observableArrayList());
 
@@ -167,6 +166,26 @@ public class ChatController {
         Arrays.sort(usernames);
 
         userList.getItems().clear();
-        Collections.addAll(userList.getItems(),usernames);
+        Collections.addAll(userList.getItems(), usernames);
+    }
+
+    private static String readUsingBufferedReader(File fileName) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(fileName));
+        String line = null;
+        StringBuilder stringBuilder = new StringBuilder();
+        ArrayList<String> listHistory = new ArrayList<>();
+        while ((line = reader.readLine()) != null) {
+            listHistory.add(line);
+
+        }
+
+        int hundredString = listHistory.size() - 100;
+
+        for (int i = hundredString; i < listHistory.size() - 1 ; i++) {
+            stringBuilder.append(listHistory.get(i)).append("\n").append("\n");
+        }
+
+        return stringBuilder.toString();
+
     }
 }
