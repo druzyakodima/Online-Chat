@@ -3,13 +3,10 @@ package com.example.windowchatlesson4.server.handler;
 import com.example.windowchatlesson4.controllers.ChatController;
 import com.example.windowchatlesson4.server.EchoServer;
 import com.example.windowchatlesson4.server.authentication.AuthenticationService;
-import com.example.windowchatlesson4.server.authentication.DBAuthenticationService;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.io.*;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -27,6 +24,7 @@ public class ClientHandler {
     private static final String GET_CLIENTS_CMD = "/get";
     private static final String CHANGE_USERNAME_CMD = "/ch";
     private static final String REGISTER_CMD_PREFIX = "/reg";
+    private static final String REGISTER_OK_CMD_PREFIX = "/regOk";
 
     private ObservableList<String> names;
     private EchoServer echoServer;
@@ -52,11 +50,12 @@ public class ClientHandler {
         new Thread(() -> {
             try {
                 try {
-                    authentication();
+                    authenticationAndRegister();
+                    readMassage();
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
+                    echoServer.subscribe(this);
                 }
-                readMassage();
             } catch (IOException e) {
                 echoServer.unSubscribe(this);
 
@@ -79,7 +78,8 @@ public class ClientHandler {
         this.username = username;
     }
 
-    private void authentication() throws IOException, SQLException, ClassNotFoundException {
+    private void authenticationAndRegister() throws IOException, SQLException, ClassNotFoundException {
+
         while (true) {
             String message = in.readUTF();
             if (message.startsWith(AUTH_CMD_PREFIX)) {
@@ -87,21 +87,10 @@ public class ClientHandler {
                 if (isSuccessAuth) {
                     break;
                 }
-            } else {
-                out.writeUTF(AUTHERR_CMD_PREFIX + " Ошибка аутентификации");
-                System.out.println("Неудачная попытка аутентификации");
-            }
-        }
-    }
 
- /*   private void register() throws IOException {
-        while (true) {
-            String message = in.readUTF();
-            if (message.startsWith(REGISTER_CMD_PREFIX)) {
-                boolean registerOk = processRegister(message);
-                if (registerOk) {
-                    break;
-                }
+            } else if (message.startsWith(REGISTER_CMD_PREFIX)) {
+                processRegister(message);
+
             } else {
                 out.writeUTF(AUTHERR_CMD_PREFIX + " Ошибка аутентификации");
                 System.out.println("Неудачная попытка аутентификации");
@@ -112,7 +101,7 @@ public class ClientHandler {
     private boolean processRegister(String message) throws IOException {
         String[] parse = message.split("\\s+", 4);
         if (parse.length != 4) {
-            out.writeUTF(AUTHERR_CMD_PREFIX + "Ошибка регистрации");
+            out.writeUTF(REGISTER_CMD_PREFIX + "Ошибка регистрации");
             return false;
         }
 
@@ -120,28 +109,20 @@ public class ClientHandler {
         String password = parse[2];
         String usernameClient = parse[3];
 
-        DBAuthenticationService dbAuthenticationService = new DBAuthenticationService();
-        username = dbAuthenticationService.insertUsername(login, password, usernameClient);
+        AuthenticationService auth = echoServer.getAuthenticationService();
 
 
-        if (username != null) {
-            if (echoServer.isUsernameBusy(username)) {
-                out.writeUTF(String.format("Логин %s уже используется", login));
-                return false;
-            }
-
-            out.writeUTF(AUTHOK_CMD_PREFIX + " " + username);
-
-            echoServer.subscribe(this);
-            System.out.println("Пользователь " + username + " подключился к чату");
-            echoServer.broadCastClients(this);
-
+        if (auth.checkLoginByFree(login)) {
+            auth.createUser(login, password, usernameClient);
+            out.writeUTF(REGISTER_OK_CMD_PREFIX);
             return true;
+        } else {
+
+            out.writeUTF(REGISTER_CMD_PREFIX + " Пользователь с таким логином уже существует");
+
+            return false;
         }
-
-
-        return false;
-    }*/
+    }
 
 
     private boolean processAuthentication(String message) throws IOException, SQLException, ClassNotFoundException {
@@ -164,18 +145,21 @@ public class ClientHandler {
                 return false;
             }
 
-
             out.writeUTF(AUTHOK_CMD_PREFIX + " " + username);
 
-            echoServer.subscribe(this);
-            System.out.println("Пользователь " + username + " подключился к чату");
-            echoServer.broadCastClients(this);
+            connectUser(username);
 
             return true;
         } else {
             out.writeUTF(AUTHERR_CMD_PREFIX + " " + "Неверный логин или пароль");
             return false;
         }
+    }
+
+    private void connectUser(String username) throws IOException {
+        echoServer.subscribe(this);
+        System.out.println("Пользователь " + username + " подключился к чату");
+        echoServer.broadCastClients(this);
     }
 
     private void readMassage() throws IOException {

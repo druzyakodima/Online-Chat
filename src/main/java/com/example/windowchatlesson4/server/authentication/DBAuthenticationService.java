@@ -4,52 +4,105 @@ import java.sql.*;
 
 public class DBAuthenticationService implements AuthenticationService {
 
+    public static final String SQLITE_SRC = "jdbc:sqlite:src/main/resources/db/mainDB.db";
     private static Connection connection;
     private static Statement stmt;
-    private ResultSet rs;
+    private static ResultSet rs;
 
 
     @Override
-    public String getUsernameByLoginAndPassword(String login, String password) throws SQLException, ClassNotFoundException {
+    public String getUsernameByLoginAndPassword(String login, String password)  {
+        String passwordDB = null;
+        String username = null;
 
-        Class.forName("org.sqlite.JDBC");
-        connection = DriverManager.getConnection("jdbc:sqlite:src/main/resources/db/mainDB.db");
-        stmt = connection.createStatement();
+        startAuthentication();
 
-        rs = stmt.executeQuery(String.format("SELECT * FROM auth WHERE login = '%s'", login));
+        try {
+            PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM auth WHERE login = ?");
+            pstmt.setString(1, login);
+            rs = pstmt.executeQuery();
 
-        if (rs.isClosed()) {
-            return null;
+            if (rs.isClosed()) {
+                return null;
+            }
+
+            username = rs.getString("username");
+            passwordDB = rs.getString("password");
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
 
-        String username = rs.getString("username");
-        String passwordDB = rs.getString("password");
 
         return ((passwordDB != null) && (passwordDB.equals(password))) ? username : null;
 
     }
 
     @Override
-    public void startAuthentication() throws ClassNotFoundException, SQLException {
+    public void startAuthentication() {
+        try {
+            Class.forName("org.sqlite.JDBC");
+            connection = DriverManager.getConnection(SQLITE_SRC);
+            stmt = connection.createStatement();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     @Override
-    public void endAuthentication() throws SQLException {
-        connection.close();
+    public Boolean checkLoginByFree(String login) {
+        String username = null;
+        startAuthentication();
+        try {
+            PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM auth WHERE login = ?");
+            rs = pstmt.executeQuery();
+            if (rs.isClosed()) {
+                return true;
+            }
+
+            username = rs.getString("username");
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return username == null;
     }
 
-    public String insertUsername(String login, String password, String username)  {
+    @Override
+    public void createUser(String login, String password, String username) {
         try {
+            PreparedStatement pstmt = connection.prepareStatement("INSERT INTO auth (login, password, username) VALUES (?, ?, ?)");
 
-           stmt.executeUpdate(String.format("INSERT INTO auth (login, password, username) VALUES ('user%s', '%s', " + "'username%s')", login, password, username));
+            pstmt.setString(1, login);
+            pstmt.setString(2, password);
+            pstmt.setString(3, username);
+
+            pstmt.addBatch();
+
+            pstmt.executeBatch();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    @Override
+    public void updateUsername(String login, String newUsername)  {
+        try {
+            stmt.executeUpdate(String.format("UPDATE auth SET username = '%s' WHERE login = '%s'", newUsername, login));
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return username;
     }
 
-   public  void updateUsername(String login, String username) throws SQLException {
-        stmt.executeUpdate(String.format("UPDATE auth SET username = '%s' WHERE login = '%s'", username, login));
+    @Override
+    public void endAuthentication() {
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }

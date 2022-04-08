@@ -2,6 +2,8 @@ package com.example.windowchatlesson4.server.authentication;
 
 import com.example.windowchatlesson4.controllers.ChatController;
 import com.example.windowchatlesson4.server.models.User;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +24,21 @@ public class BaseAuthentication implements AuthenticationService {
             }
         }
         return null;
+    }
+
+    @Override
+    public Boolean checkLoginByFree(String login) {
+        return false;
+    }
+
+    @Override
+    public void createUser(String login, String password, String username) {
+
+    }
+
+    @Override
+    public void updateUsername(String login, String newUsername)  {
+
     }
 
     @Override

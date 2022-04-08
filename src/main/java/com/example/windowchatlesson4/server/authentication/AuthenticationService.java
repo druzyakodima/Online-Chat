@@ -4,8 +4,12 @@ import java.sql.SQLException;
 
 public interface AuthenticationService {
 
-    String getUsernameByLoginAndPassword(String login, String password) throws SQLException, ClassNotFoundException;
+    String getUsernameByLoginAndPassword(String login, String password);
+    void createUser(String login, String password, String username);
+    void updateUsername(String login, String newUsername);
+    Boolean checkLoginByFree(String login);
 
-    void startAuthentication() throws ClassNotFoundException, SQLException;
-    void endAuthentication() throws SQLException;
- }
+    void startAuthentication();
+
+    void endAuthentication();
+}

@@ -112,12 +112,7 @@ public class EchoServer {
         DBAuthenticationService dbAuthenticationService = new DBAuthenticationService();
 
         new Thread(() -> {
-            try {
-                dbAuthenticationService.updateUsername(login, username);
-
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            dbAuthenticationService.updateUsername(login, username);
 
             for (ClientHandler client : clients) {
 
@@ -125,9 +120,10 @@ public class EchoServer {
 
                     client.setUsername(username);
                     netWork.setUsername(username);
-
+                    AuthenticationService auth = getAuthenticationService();
                     int index = clientsChangeName.indexOf(sender);
                     clientsChangeName.set(index, client);
+                    auth.updateUsername(login, username);
                 }
                 try {
                     client.sendClientsList(clientsChangeName);

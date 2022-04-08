@@ -25,6 +25,7 @@ public class NetWork {
     private static final String GET_CLIENTS_CMD = "/get";
     private static final String CHANGE_USERNAME_CMD = "/ch";
     private static final String REGISTER_CMD_PREFIX = "/reg";
+    private static final String REGISTER_OK_CMD_PREFIX = "/regOk";
 
     private final String DEFAULT_HOST = "localhost";
     private final int DEFAULT_PORT = 8180;
@@ -145,9 +146,7 @@ public class NetWork {
         try {
             out.writeUTF(String.format("%s %s %s %s", REGISTER_CMD_PREFIX, login, password, username));
             String response = in.readUTF();
-            this.username = response.split("\\s", 2)[1];
-            if (response.startsWith(AUTHOK_CMD_PREFIX)) {
-                this.username = response.split("\\s", 2)[1];
+            if (response.startsWith(REGISTER_OK_CMD_PREFIX)) {
                 return null;
             } else {
                 return response.split("\\s", 2)[1];

@@ -53,6 +53,26 @@ public class AuthController {
         }
     }
 
+    public void checkAuth(String login, String password) {
+
+        if (login == null || password == null) {
+            startClient.showErrorAlert("Ошибка ввода при аутентификации", "Поля не заданы");
+        }
+
+        if (login.length() == 0 || password.length() == 0) {
+            startClient.showErrorAlert("Ошибка ввода", "Поля не должны быть пустыми");
+            return;
+        }
+
+        String authErrorMessage = netWork.sendAuthMessage(login, password);
+
+        if (authErrorMessage == null) {
+            startClient.openChatDialog();
+        } else {
+            startClient.showErrorAlert("Ошибка аутентификации",authErrorMessage);
+        }
+    }
+
     @FXML
     void registerUser() {
         String login = loginFieldRegister.getText().trim();
@@ -60,19 +80,19 @@ public class AuthController {
         String password = passwordRegister.getText().trim();
 
         if (login.length() == 0 || password.length() == 0 || username.length() == 0) {
-            startClient.showErrorAlert("Ошибка ввода", "Поля не должны быть пустыми");
+            startClient.showErrorAlert("Ошибка регистрации", "Поля не должны быть пустыми");
             return;
         }
 
-        String authErrorMessage =  netWork.sendRegisterMessage(login, password,username);
+        String registerError =  netWork.sendRegisterMessage(login, password,username);
 
-        if (authErrorMessage == null) {
+        if (registerError == null) {
 
-            startClient.openChatDialog();
+            startClient.showErrorAlert("Поздравляем вы зарегистрировались!", "Добро пожаловать!");
+            checkAuth(login, password);
         } else {
-            startClient.showErrorAlert("Ошибка регистарции",authErrorMessage);
+            startClient.showErrorAlert("Ошибка регистрации",registerError );
         }
-
     }
 
     @FXML

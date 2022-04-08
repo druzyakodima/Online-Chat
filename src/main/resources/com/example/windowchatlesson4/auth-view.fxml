@@ -39,9 +39,9 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TextField fx:id="loginFieldRegister" layoutX="111.0" layoutY="14.0" prefHeight="38.0" prefWidth="205.0" promptText="Не готово" AnchorPane.bottomAnchor="167.0" AnchorPane.leftAnchor="111.0" AnchorPane.rightAnchor="32.0" AnchorPane.topAnchor="14.0" />
-                        <TextField fx:id="usernameRegister" layoutX="110.0" layoutY="63.0" prefHeight="38.0" prefWidth="206.0" promptText="Не готово" AnchorPane.topAnchor="63.0" />
-                        <PasswordField fx:id="passwordRegister" layoutX="110.0" layoutY="116.0" prefHeight="38.0" prefWidth="206.0" promptText="Не Готово" />
+                        <TextField fx:id="loginFieldRegister" layoutX="111.0" layoutY="14.0" prefHeight="38.0" prefWidth="205.0" AnchorPane.bottomAnchor="167.0" AnchorPane.leftAnchor="111.0" AnchorPane.rightAnchor="32.0" AnchorPane.topAnchor="14.0" />
+                        <TextField fx:id="usernameRegister" layoutX="110.0" layoutY="63.0" prefHeight="38.0" prefWidth="206.0" AnchorPane.topAnchor="63.0" />
+                        <PasswordField fx:id="passwordRegister" layoutX="110.0" layoutY="116.0" prefHeight="38.0" prefWidth="206.0" />
                         <Button layoutX="125.0" layoutY="172.0" mnemonicParsing="false" onAction="#registerUser" prefHeight="35.0" prefWidth="68.0" style="-fx-background-color: #191970;" text="Sign in" textFill="WHITE" />
                         <Button layoutX="213.0" layoutY="173.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="73.0" style="-fx-background-color: #191970;" text="Close" textFill="WHITE" />
                         <Label layoutX="46.0" layoutY="25.0" text="Login">
