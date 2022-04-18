@@ -5,6 +5,7 @@ import com.example.windowchatlesson4.server.authentication.AuthenticationService
 import com.example.windowchatlesson4.server.authentication.DBAuthenticationService;
 import com.example.windowchatlesson4.server.handler.ClientHandler;
 import com.example.windowchatlesson4.server.models.NetWork;
+import org.apache.log4j.Logger;
 
 
 import java.io.*;
@@ -26,6 +27,7 @@ public class EchoServer {
     private List<ClientHandler> clientsChangeName = new ArrayList<>();
     private File historyChatFile = new File("src/main/resources/historyChat/history.txt");
     private  BufferedWriter writeHistoryChat;
+    private Logger file = Logger.getLogger("file");
 
 
     public EchoServer(int port) throws IOException {
@@ -38,6 +40,7 @@ public class EchoServer {
     public void start() {
         System.out.println("СЕРВЕР ЗАПУЩЕН!");
         System.out.println("-------------------");
+        file.info("Сервер Запущен");
         try {
             while (true) {
                 waitAndProcessNewClientConnection();
@@ -129,7 +132,7 @@ public class EchoServer {
                     client.sendClientsList(clientsChangeName);
                     client.sendServerMessage(String.format("%s поменял имя на %s", oldName, username
                     ));
-
+                    file.info("Пользователь " + oldName + " сменил имя на " + username);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -154,6 +157,7 @@ public class EchoServer {
                 }
             }
         }).start();
+        file.info("Пользователь " + sender.getUsername() + " отправил приватное сообщение");
     }
 
     public synchronized void broadCastClients(ClientHandler sender) throws IOException {
@@ -161,6 +165,7 @@ public class EchoServer {
 
             client.sendServerMessage(String.format("%s присоединился к чату", sender.getUsername()
             ));
+            file.info("Пользователь " + sender.getUsername() + " подключился к чату");
             client.sendClientsList(clients);
         }
     }
@@ -172,6 +177,7 @@ public class EchoServer {
             }
             client.sendServerMessage(String.format("%s отключился", sender.getUsername()));
             client.sendClientsList(clients);
+            file.info("Пользователь " + sender.getUsername() + " отключился");
         }
 
     }

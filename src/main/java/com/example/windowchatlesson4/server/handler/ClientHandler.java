@@ -10,6 +10,8 @@ import java.net.Socket;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.apache.log4j.*;
+
 
 public class ClientHandler {
 
@@ -33,6 +35,7 @@ public class ClientHandler {
     private DataOutputStream out;
     private String username;
     ChatController chatController = new ChatController();
+    private Logger file = Logger.getLogger("file");
 
     public ClientHandler(EchoServer EchoServer, Socket clientSocket) {
         this.echoServer = EchoServer;
@@ -66,7 +69,6 @@ public class ClientHandler {
 
                 }
                 System.out.println("Клиент отключился!" + "\n" + "Ожидание клиента...");
-
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
@@ -94,6 +96,7 @@ public class ClientHandler {
             } else {
                 out.writeUTF(AUTHERR_CMD_PREFIX + " Ошибка аутентификации");
                 System.out.println("Неудачная попытка аутентификации");
+                file.warn("Неудачная попытка аутентификации");
             }
         }
     }
@@ -115,11 +118,11 @@ public class ClientHandler {
         if (auth.checkLoginByFree(login)) {
             auth.createUser(login, password, usernameClient);
             out.writeUTF(REGISTER_OK_CMD_PREFIX);
+            file.info("Зарегистрировался новый пользователь " + usernameClient);
             return true;
         } else {
 
             out.writeUTF(REGISTER_CMD_PREFIX + " Пользователь с таким логином уже существует");
-
             return false;
         }
     }
@@ -129,6 +132,7 @@ public class ClientHandler {
         String[] parse = message.split("\\s+", 3);
         if (parse.length != 3) {
             out.writeUTF(AUTHERR_CMD_PREFIX + " Ошибка аутентификации");
+            file.warn("Ошибка аутентификации");
             return false;
         }
 
@@ -172,7 +176,6 @@ public class ClientHandler {
                 System.exit(0);
             } else if (message.startsWith(END_CLIENT_CMD_PREFIX)) {
                 return;
-
             } else if (message.startsWith(PRIVATE_MSG_CMD_PREFIX)) {
                 echoServer.privateMessage(message, this);
             } else if (message.startsWith(CHANGE_USERNAME_CMD)) {

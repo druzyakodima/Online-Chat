@@ -12,6 +12,7 @@ module com.example.windowchatlesson4 {
     requires lombok;
     requires org.xerial.sqlitejdbc;
     requires java.sql;
+    requires log4j;
 
     opens com.example.windowchatlesson4 to javafx.fxml;
     exports com.example.windowchatlesson4;
