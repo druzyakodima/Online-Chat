@@ -26,7 +26,7 @@ public class EchoServer {
     NetWork netWork = new NetWork();
     private List<ClientHandler> clientsChangeName = new ArrayList<>();
     private File historyChatFile = new File("src/main/resources/historyChat/history.txt");
-    private  BufferedWriter writeHistoryChat;
+    private BufferedWriter writeHistoryChat;
     private Logger file = Logger.getLogger("file");
 
 
@@ -75,7 +75,7 @@ public class EchoServer {
         clientsChangeName.add(clientHandler);
     }
 
-    public synchronized void unSubscribe(ClientHandler clientHandler)  {
+    public synchronized void unSubscribe(ClientHandler clientHandler) {
         clients.remove(clientHandler);
         System.out.println(clients);
     }
@@ -182,7 +182,7 @@ public class EchoServer {
 
     }
 
-    private void historyChat(String message, ClientHandler sender)  {
+    private void historyChat(String message, ClientHandler sender) {
         try (BufferedWriter writeHistoryChat = new BufferedWriter(new FileWriter(historyChatFile, true));) {
 
             writeHistoryChat.write(new Date(new Date().getTime()) + " " + sender.getUsername() + ": " + message + "\n");

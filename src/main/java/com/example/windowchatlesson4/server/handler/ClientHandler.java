@@ -127,7 +127,6 @@ public class ClientHandler {
         }
     }
 
-
     private boolean processAuthentication(String message) throws IOException, SQLException, ClassNotFoundException {
         String[] parse = message.split("\\s+", 3);
         if (parse.length != 3) {
