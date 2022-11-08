@@ -12,4 +12,6 @@ module com.example.windowchatlesson4 {
 
     opens com.example.windowchatlesson4 to javafx.fxml;
     exports com.example.windowchatlesson4;
+    exports com.example.windowchatlesson4.controllers;
+    opens com.example.windowchatlesson4.controllers to javafx.fxml;
 }
