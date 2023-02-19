@@ -1,6 +1,6 @@
 package com.example.windowchatlesson4.server.models;
-import lombok.Data;
 
+import lombok.Data;
 @Data
 public class User {
     private final String login;

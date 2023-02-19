@@ -9,9 +9,8 @@ public class DBAuthenticationService implements AuthenticationService {
     private static Statement stmt;
     private static ResultSet rs;
 
-
     @Override
-    public String getUsernameByLoginAndPassword(String login, String password)  {
+    public String getUsernameByLoginAndPassword(String login, String password) {
         String passwordDB = null;
         String username = null;
 
@@ -32,10 +31,7 @@ public class DBAuthenticationService implements AuthenticationService {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-
-
         return ((passwordDB != null) && (passwordDB.equals(password))) ? username : null;
-
     }
 
     @Override
@@ -88,7 +84,7 @@ public class DBAuthenticationService implements AuthenticationService {
     }
 
     @Override
-    public void updateUsername(String login, String newUsername)  {
+    public void updateUsername(String login, String newUsername) {
         try {
             stmt.executeUpdate(String.format("UPDATE auth SET username = '%s' WHERE login = '%s'", newUsername, login));
         } catch (SQLException e) {

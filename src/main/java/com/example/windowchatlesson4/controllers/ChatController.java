@@ -3,33 +3,29 @@ package com.example.windowchatlesson4.controllers;
 import com.example.windowchatlesson4.StartClient;
 import com.example.windowchatlesson4.server.models.NetWork;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.FileChooser;
 
 import java.io.*;
 import java.text.DateFormat;
 import java.util.*;
 
-import static javafx.collections.FXCollections.observableList;
-
 public class ChatController {
-
     @FXML
     private ListView<String> userList;
-
     @FXML
     private Button buttonSend;
-
     @FXML
     private TextField inputField;
-
     @FXML
     private TextArea chatText;
-
     @FXML
     private Label usernameTitle;
-
 
     private StartClient startClient;
 
@@ -176,16 +172,26 @@ public class ChatController {
         ArrayList<String> listHistory = new ArrayList<>();
         while ((line = reader.readLine()) != null) {
             listHistory.add(line);
-
         }
 
         int hundredString = listHistory.size() - 100;
 
-        for (int i = hundredString; i < listHistory.size() - 1 ; i++) {
+        for (int i = hundredString; i < listHistory.size() - 1; i++) {
             stringBuilder.append(listHistory.get(i)).append("\n").append("\n");
         }
 
         return stringBuilder.toString();
+
+    }
+    @FXML
+    void SelectFile(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("\uD83D\uDCCE");
+        FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Картинки", "*.jpg", "*.png", "*.gif", "*.bmp", "*.txt", "*.pdf");
+        fileChooser.getExtensionFilters().add(filter);
+        File file = fileChooser.showOpenDialog(StartClient.primaryStage);
+        Image im = new Image(file.toURI().toString());
+        ImageView imv = new ImageView(im);
 
     }
 }

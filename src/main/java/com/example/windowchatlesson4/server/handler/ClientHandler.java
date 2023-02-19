@@ -12,9 +12,7 @@ import java.util.List;
 
 import org.apache.log4j.*;
 
-
 public class ClientHandler {
-
     private static final String AUTH_CMD_PREFIX = "/auth "; // + login + password
     private static final String AUTHOK_CMD_PREFIX = "/authOk "; // + username
     private static final String AUTHERR_CMD_PREFIX = "/authErr "; // + error message

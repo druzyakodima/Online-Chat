@@ -1,35 +1,23 @@
 package com.example.windowchatlesson4.controllers;
 
 import com.example.windowchatlesson4.StartClient;
-import com.example.windowchatlesson4.server.authentication.DBAuthenticationService;
 import com.example.windowchatlesson4.server.models.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.TreeSet;
-
 public class AuthController {
     @FXML
     private TextField loginField;
-
     @FXML
     private PasswordField passwordField;
-
     @FXML
     private TextField loginFieldRegister;
-
     @FXML
     private PasswordField passwordRegister;
-
     @FXML
     private TextField usernameRegister;
-
     private NetWork netWork;
-
     private StartClient startClient;
 
     @FXML
@@ -49,7 +37,7 @@ public class AuthController {
 
             startClient.openChatDialog();
         } else {
-            startClient.showErrorAlert("Ошибка аутентификации",authErrorMessage);
+            startClient.showErrorAlert("Ошибка аутентификации", authErrorMessage);
         }
     }
 
@@ -59,7 +47,7 @@ public class AuthController {
             startClient.showErrorAlert("Ошибка ввода при аутентификации", "Поля не заданы");
         }
 
-        if (login.length() == 0 || password.length() == 0) {
+        if (login == null || password == null) {
             startClient.showErrorAlert("Ошибка ввода", "Поля не должны быть пустыми");
             return;
         }
@@ -69,7 +57,7 @@ public class AuthController {
         if (authErrorMessage == null) {
             startClient.openChatDialog();
         } else {
-            startClient.showErrorAlert("Ошибка аутентификации",authErrorMessage);
+            startClient.showErrorAlert("Ошибка аутентификации", authErrorMessage);
         }
     }
 
@@ -79,19 +67,19 @@ public class AuthController {
         String username = usernameRegister.getText().trim();
         String password = passwordRegister.getText().trim();
 
-        if (login.length() == 0 || password.length() == 0 || username.length() == 0) {
+        if (login.isBlank() || password.isBlank()|| username.isBlank()) {
             startClient.showErrorAlert("Ошибка регистрации", "Поля не должны быть пустыми");
             return;
         }
 
-        String registerError =  netWork.sendRegisterMessage(login, password,username);
+        String registerError = netWork.sendRegisterMessage(login, password, username);
 
         if (registerError == null) {
 
             startClient.showErrorAlert("Поздравляем вы зарегистрировались!", "Добро пожаловать!");
             checkAuth(login, password);
         } else {
-            startClient.showErrorAlert("Ошибка регистрации",registerError );
+            startClient.showErrorAlert("Ошибка регистрации", registerError);
         }
     }
 
@@ -107,6 +95,4 @@ public class AuthController {
     public void setStartClient(StartClient startClient) {
         this.startClient = startClient;
     }
-
-
 }

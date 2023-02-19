@@ -14,16 +14,15 @@ import java.io.IOException;
 
 
 public class StartClient extends Application {
-
     private NetWork netWork;
-    private Stage primaryStage;
+    public static Stage primaryStage;
     private Stage authStage;
     private ChatController chatController;
 
     @Override
     public void start(Stage stage) throws IOException {
 
-        this.primaryStage = stage;
+        primaryStage = stage;
         netWork = new NetWork();
         netWork.connect();
 
@@ -44,10 +43,10 @@ public class StartClient extends Application {
         authStage.setAlwaysOnTop(true);
         authStage.show();
 
-        AuthController chatController = authLoader.getController();
+        AuthController authController = authLoader.getController();
 
-        chatController.setNetWork(netWork);
-        chatController.setStartClient(this);
+        authController.setNetWork(netWork);
+        authController.setStartClient(this);
     }
 
     private void createChatDialog() throws IOException {
@@ -60,13 +59,10 @@ public class StartClient extends Application {
         chatController = fxmlLoader.getController();
         chatController.setNetWork(netWork);
 
-
     }
 
     public static void main(String[] args) {
-
         launch();
-
     }
 
     public void openChatDialog() {

@@ -2,28 +2,21 @@ package com.example.windowchatlesson4.server.models;
 
 import com.example.windowchatlesson4.controllers.ChatController;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ListView;
-import lombok.SneakyThrows;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Scanner;
+
 
 public class NetWork {
 
     private static final String AUTH_CMD_PREFIX = "/auth"; // + login + password
     private static final String AUTHOK_CMD_PREFIX = "/authOk"; // + username
-    private static final String AUTHERR_CMD_PREFIX = "/authErr"; // + error message
     private static final String CLIENT_MSG_CMD_PREFIX = "/cMsg"; // + Msg
     private static final String SERVER_MSG_CMD_PREFIX = "/sMsg"; // + sMsg
     private static final String PRIVATE_MSG_CMD_PREFIX = "/pMsg"; // + sMsg
-    private static final String STOP_SERVER_CMD_PREFIX = "/stop";
-    private static final String END_CLIENT_CMD_PREFIX = "/end";
     private static final String GET_CLIENTS_CMD = "/get";
-    private static final String CHANGE_USERNAME_CMD = "/ch";
+
     private static final String REGISTER_CMD_PREFIX = "/reg";
     private static final String REGISTER_OK_CMD_PREFIX = "/regOk";
 
@@ -36,9 +29,6 @@ public class NetWork {
     private final String host;
     private final int port;
     private String username;
-    private ChatController chatController;
-    private ListView<String> userList;
-    private ObservableList<String> names;
 
     public NetWork(String host, int port) {
         this.host = host;
@@ -53,7 +43,7 @@ public class NetWork {
     public void connect() {
 
         try {
-            Socket socket = new Socket("localhost", 8180);
+            Socket socket = new Socket("localhost", 8189);
             in = new DataInputStream(socket.getInputStream());
             out = new DataOutputStream(socket.getOutputStream());
 

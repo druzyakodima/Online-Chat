@@ -6,8 +6,7 @@ import org.apache.log4j.PropertyConfigurator;
 import java.io.IOException;
 
 public class ServerApp {
-
-    private static final int SERVER_PORT = 8180;
+    private static final int SERVER_PORT = 8189;
 
     public static void main(String[] args) {
 

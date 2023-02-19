@@ -1,34 +1,27 @@
 package com.example.windowchatlesson4.server;
 
-import com.example.windowchatlesson4.controllers.ChatController;
 import com.example.windowchatlesson4.server.authentication.AuthenticationService;
 import com.example.windowchatlesson4.server.authentication.DBAuthenticationService;
 import com.example.windowchatlesson4.server.handler.ClientHandler;
 import com.example.windowchatlesson4.server.models.NetWork;
 import org.apache.log4j.Logger;
 
-
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.sql.SQLException;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
 public class EchoServer {
-    private ClientHandler clientHandler = new ClientHandler();
+
     private final ServerSocket serverSocket;
     private final AuthenticationService authenticationService;
     private final List<ClientHandler> clients;
     NetWork netWork = new NetWork();
-    private List<ClientHandler> clientsChangeName = new ArrayList<>();
-    private File historyChatFile = new File("src/main/resources/historyChat/history.txt");
-    private BufferedWriter writeHistoryChat;
-    private Logger file = Logger.getLogger("file");
-
+    private final List<ClientHandler> clientsChangeName = new ArrayList<>();
+    private final File historyChatFile = new File("src/main/resources/historyChat/history.txt");
+    private final Logger file = Logger.getLogger("file");
 
     public EchoServer(int port) throws IOException {
         serverSocket = new ServerSocket(port);
@@ -107,7 +100,7 @@ public class EchoServer {
 
     }
 
-    public void changeUsername(String message, ClientHandler sender) throws IOException {
+    public void changeUsername(String message, ClientHandler sender) {
         String[] parse = message.split(" ", 3);
         String login = parse[1];
         String username = parse[2];
@@ -133,12 +126,23 @@ public class EchoServer {
                     client.sendServerMessage(String.format("%s поменял имя на %s", oldName, username
                     ));
                     file.info("Пользователь " + oldName + " сменил имя на " + username);
+                    broadCastClients(sender);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
 
             }
         }).start();
+    }
+
+    public synchronized void broadCastClients(ClientHandler sender) throws IOException {
+        for (ClientHandler client : clients) {
+
+            client.sendServerMessage(String.format("%s присоединился к чату", sender.getUsername()
+            ));
+            file.info("Пользователь " + sender.getUsername() + " подключился к чату");
+            client.sendClientsList(clients);
+        }
     }
 
     public void privateMessage(String message, ClientHandler sender) {
@@ -158,16 +162,6 @@ public class EchoServer {
             }
         }).start();
         file.info("Пользователь " + sender.getUsername() + " отправил приватное сообщение");
-    }
-
-    public synchronized void broadCastClients(ClientHandler sender) throws IOException {
-        for (ClientHandler client : clients) {
-
-            client.sendServerMessage(String.format("%s присоединился к чату", sender.getUsername()
-            ));
-            file.info("Пользователь " + sender.getUsername() + " подключился к чату");
-            client.sendClientsList(clients);
-        }
     }
 
     public synchronized void broadCastClientsDisconnected(ClientHandler sender) throws IOException {
